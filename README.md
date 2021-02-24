@@ -1,5 +1,9 @@
 # GenePlanet Test - Host an ASP.NET Core App with Nginx and Docker: Load Balancing
 
+## Reading and evaluating ideas
+
+Following the three articles, _[Configure ASP.NET Core to work with proxy servers and load balancers](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-3.1#configure-nginx)_ and _[Host ASP.NET Core on Linux with Nginx](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-3.1)_ and [Medium Article](https://codeburst.io/load-balancing-an-asp-net-core-web-app-using-nginx-and-docker-66753eb08204), in Microsoft Docs, I created a demo application using Docker Compose, which orchestrates an Nginx reverse proxy server and an ASP.NET Core Web API app.
+
 ## Project creation
  Reading article [Configure ASP.NET Core to work with proxy servers and load balancers](https://dev.to/avinashth/containerize-a-net-core-web-api-project-4p05), I created core application, based on default "Weather Forecast" web api service.
  
@@ -46,19 +50,54 @@ There are few web services that can be accessed:
   - User name Helloworld display
   http://localhost/api/helloworld/{Enter your name}
   - Count +1 when called and store to sql db
-  http://localhost:5000/api/count
+  http://localhost/api/count
   - Show count score from sql db
-  http://localhost:5000/api/allcounts
-  
+  http://localhost/api/allcounts
+    
 ## Database preparation
 
-I highly recommend creating and running MySQL server locally. I recommend [HeidiSQL](https://www.heidisql.com/) or MySQL Workbench. Not mention anywhere, we need firstly to prepare database, table and user on host db server. Later, we will use host's files as volume to access it from dockerized mysql server.
+At creating and testing table with data, I was running MySQL server locally. I recommend [HeidiSQL](https://www.heidisql.com/) or MySQL Workbench. 
 
-Create database named "gene-task". Inside that db, load and run "setup.sql" script (on root folder, "sql-scripts"). This will create "LogAccessCounts" table, where web api services /api/count and /api/allcounts will insert or select data.
+First we need to add database, table and user on host db server.
 
-Don't forget to set user connect from anywhere ( % ) in local MySQL server.
+I was using docker image Adminer, which helped me with creating database, table and user. (you can access Adminer on http://localhost:8080)
 
-In Docker-compose.yml script, you will find how is MySQL dockerized, user, db and tables are being read and written on local host mysql (which has to be shutdown). With this configuration, dockerized mysql is seen and accessed by loadbalanced workers (same ip range). Docker has big problems with using loadbalancing and database servers, servers by default don't see each other because ip range difference.
+Now we will create database named "testdb", "LogAccessCounts" table, where web api services /api/count and /api/allcounts will insert or select data. And lastly we will create myuser, that can read/write data to table. (All scripts are in folder "sql-scripts")
+
+
+Adminer console
+![Adminer Console](/Adminer_LogAccessCounts_Table.jpg)
+Login to the server on address http://localhost:8080
+
+Use root and example1234 (described in docker-compose.yml).
+
+Create myuser. Press "SQL Command" and copy then execute
+```bash
+CREATE USER 'myuser'@'localhost' IDENTIFIED BY 'mypass1234';
+CREATE USER 'myuser'@'%' IDENTIFIED BY 'mypass1234';
+GRANT ALL ON *.* TO 'myuser'@'localhost';
+GRANT ALL ON *.* TO 'myuser'@'%';
+flush privileges;
+```
+
+Create database testdb. Press "SQL Command" and copy then execute
+```bash
+CREATE DATABASE testdb;
+USE testdb;
+```
+
+Lastly create LogAccessCount table. Press "SQL Command" and copy then execute
+```bash
+CREATE TABLE `LogAccessCounts` (
+	`ID` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`IP` VARCHAR(15) NULL DEFAULT '0',
+	`HostName` VARCHAR(255) NULL DEFAULT '',
+	`Timestamp` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+	INDEX `ID` (`ID`)
+)
+COLLATE='utf8mb4_general_ci'
+AUTO_INCREMENT=1;
+```
 
 Very important in /GenePlanetTest/src/MyWebApi/ is file **"config.json"**, where we set access to db for worker. It is used as template to create workers.
 
@@ -67,20 +106,10 @@ Recommended setting:
 ```bash
 {
     "Data": {
-        "ConnectionString": "server=database;user id=myuser;password=*******;port=3306;database=gene-task;"
+        "ConnectionString": "server=database;user id=myuser;password=mypass1234;port=3306;database=testdb;"
     }
 }
 ```
-
-Set correct file volume. Set local host mysql files and folders (volume) to be linked on docker server.
-In my case local host mysql files are on windows (left), docker mysql are on linux (right side)
-```bash
-#Specify where the persisted Data should be stored
-    volumes:
-      - ./mysql.cnf:/etc/my.cnf 
-      - c:\xampp\mysql\data:/var/lib/mysql
-```
-Also check included mysql.cnf configuration file. In most cases you can delete this line. If you have trouble running dockerized mysql, then you need to include and inspect configuration value. I needed to set "socket=/tmp/mysql.sock" in order docker mysql server can mount local volume.
 
 ## Set database access in asp.net core app
 
