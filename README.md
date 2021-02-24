@@ -81,7 +81,7 @@ Login to the server on address http://localhost:8080, use root and example1234 (
 
 
 Create myuser. Press "SQL Command" and copy then execute
-```bash
+```sql
 CREATE USER 'myuser'@'localhost' IDENTIFIED BY 'mypass1234';
 CREATE USER 'myuser'@'%' IDENTIFIED BY 'mypass1234';
 GRANT ALL ON *.* TO 'myuser'@'localhost';
@@ -90,13 +90,13 @@ flush privileges;
 ```
 
 Create database testdb. Press "SQL Command" and copy then execute
-```bash
+```sql
 CREATE DATABASE testdb;
 USE testdb;
 ```
 
 Lastly create LogAccessCount table. Press "SQL Command" and copy then execute
-```bash
+```sql
 CREATE TABLE `LogAccessCounts` (
 	`ID` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`IP` VARCHAR(15) NULL DEFAULT '0',
