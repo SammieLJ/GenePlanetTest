@@ -60,6 +60,18 @@ Don't forget to set user connect from anywhere ( % ) in local MySQL server.
 
 In Docker-compose.yml script, you can see how dockerized MySQL is set, but user, db and tables are being read and written on local host mysql (which has to be shutdown). That's why it is unnececary to setup mysql in docker. With this configuration, dockerized mysql is seen and accessed by loadbalanced workers (same ip range). Docker has big problems with using loadbalancing and database servers, servers by default don't see each other because ip range difference.
 
+Very important in /GenePlanetTest/src/MyWebApi/ is file "config.json", where we set access to db for worker. It is used as template to create workers.
+
+Use value from DBHOST (docker-compose.yml) to access dockerizted mysql server, set username and password that have rw rights for "gene-task" database and table.
+Recommended setting: 
+```bash
+{
+    "Data": {
+        "ConnectionString": "server=database;user id=myuser;password=*******;port=3306;database=gene-task;"
+    }
+}
+```
+
 ## Set database access in asp.net core app
 
 ## Load Balancing
@@ -103,7 +115,7 @@ netstat -aon | findstr :80
 
 This could be achived by using Kubernetes (on service provider like Linode, DO, Azure, aws) or [Minikube](https://minikube.sigs.k8s.io/docs/start/)
 
-Or using _[KEDA](https://blog.tomkerkhove.be/2019/06/14/scaling-apps-with-keda/) on Azure.
+Or using [KEDA](https://blog.tomkerkhove.be/2019/06/14/scaling-apps-with-keda/) on Azure.
 
 ## SSL
 
