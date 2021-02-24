@@ -64,11 +64,11 @@ I was using docker image Adminer, which helped me with creating database, table 
 
 Now we will create database named "testdb", "LogAccessCounts" table, where web api services /api/count and /api/allcounts will insert or select data. And lastly we will create myuser, that can read/write data to table. (All scripts are in folder "sql-scripts")
 
-Adminer console
-![Adminer Console](./Adminer_LogAccessCounts_Table.jpg)
-Login to the server on address http://localhost:8080
+**Adminer console**
+Login to the server on address http://localhost:8080, use root and example1234 (described in docker-compose.yml).
 
-Login into Adminer, use root and example1234 (described in docker-compose.yml).
+![Adminer Console](./Adminer_LogAccessCounts_Table.jpg)
+
 
 Create myuser. Press "SQL Command" and copy then execute
 ```bash
