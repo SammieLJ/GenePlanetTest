@@ -123,7 +123,7 @@ netstat -aon | findstr :80
 ```
 ## Alternatives to this case fo Loadbalancing
 
-This could be achived by using Kubernetes (on service provider like Linode, DO, Azure, aws) or [Minikube](https://minikube.sigs.k8s.io/docs/start/)
+This could be achived by using Kubernetes (on service provider like Linode, DO, Azure, aws) or [Minikube](https://minikube.sigs.k8s.io/docs/start/). Kubernetes offers included loadbalancing among pods and scaling.
 
 Or using [KEDA](https://blog.tomkerkhove.be/2019/06/14/scaling-apps-with-keda/) on Azure.
 
