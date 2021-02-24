@@ -11,7 +11,7 @@ Download git repo and spin 3x workers:
 docker-compose build
 docker-compose up --scale api=3 --build
 ```
-Almost set, go to *Database preparation* to set database and now can access all APIs described in *Web service exposure*
+Almost set, go to **Database preparation** to set database and now can access all APIs described in **Web service exposure**
 
 ## Project creation
  Reading article _[Configure ASP.NET Core to work with proxy servers and load balancers](https://dev.to/avinashth/containerize-a-net-core-web-api-project-4p05)_, I created core application, based on default "Weather Forecast" web api service.
