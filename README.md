@@ -1,5 +1,4 @@
-# GenePlanetTest
-# Host an ASP.NET Core App with Nginx and Docker: SSL and Load Balancing
+# GenePlanet Test - Host an ASP.NET Core App with Nginx and Docker: SSL and Load Balancing
 
 ## Project creation
  Reading article _[Configure ASP.NET Core to work with proxy servers and load balancers](https://dev.to/avinashth/containerize-a-net-core-web-api-project-4p05), I created core application, based on default "Weather Forecast" web api service.
@@ -45,13 +44,15 @@ There are few web services that can be accessed:
   - Default Weather forecast service with randomiozed data
   http://localhost/weatherforecast
   - User name Helloworld display
-  http://localhost/api/helloworld/{Ente your name}
+  http://localhost/api/helloworld/{Enter your name}
   - Count +1 when called and store to sql db
   http://localhost:5000/api/count
   - Show count score from sql db
   http://localhost:5000/api/allcounts
   
 ## Database preparation
+
+I highly recommend creating and running MySQL server locally. I recommend _[HeidiSQL](https://www.heidisql.com/) or MySQL Workbench
 
 ## Set database access in asp.net core app
 
@@ -69,7 +70,12 @@ docker-compose up
 
 ## Useful tools, when I was developing this demo
 
-This demo works best on Linux, like Ubnuntu, System76 or RedHat or MacOS. I didn't manage it to run on Windows 10.
+This demo works best on Linux, like Ubnuntu, System76 or RedHat or MacOS. I didn't manage it to run on Windows 10. On Windows is problem of docker mysql server volume file mounting.
+
+With this command, I have managed to get ip addresses of docker containers.
+```bash
+docker inspect -f '{{.Name}} - {{.NetworkSettings.IPAddress }}' $(docker ps -aq)
+```
 
 ## Alternatives to this case fo Loadbalancing
 
