@@ -5,7 +5,7 @@
 Following the three articles, _[Configure ASP.NET Core to work with proxy servers and load balancers](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-3.1#configure-nginx)_ and _[Host ASP.NET Core on Linux with Nginx](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-3.1)_ and _[Medium Article](https://codeburst.io/load-balancing-an-asp-net-core-web-app-using-nginx-and-docker-66753eb08204)_, in Microsoft Docs, I created a demo application using Docker Compose, which orchestrates an Nginx reverse proxy server and an ASP.NET Core Web API app.
 
 ## Project creation
- Reading article [Configure ASP.NET Core to work with proxy servers and load balancers](https://dev.to/avinashth/containerize-a-net-core-web-api-project-4p05), I created core application, based on default "Weather Forecast" web api service.
+ Reading article _[Configure ASP.NET Core to work with proxy servers and load balancers](https://dev.to/avinashth/containerize-a-net-core-web-api-project-4p05)_, I created core application, based on default "Weather Forecast" web api service.
  
  Added MySQL Connector
  ```bash
@@ -56,7 +56,7 @@ There are few web services that can be accessed:
     
 ## Database preparation
 
-At creating and testing table with data, I was running MySQL server locally. I recommend [HeidiSQL](https://www.heidisql.com/) or MySQL Workbench. 
+At creating and testing table with data, I was running MySQL server locally. I recommend _[HeidiSQL](https://www.heidisql.com/)_ or MySQL Workbench. 
 
 First we need to add database, table and user on host db server.
 
@@ -64,12 +64,11 @@ I was using docker image Adminer, which helped me with creating database, table 
 
 Now we will create database named "testdb", "LogAccessCounts" table, where web api services /api/count and /api/allcounts will insert or select data. And lastly we will create myuser, that can read/write data to table. (All scripts are in folder "sql-scripts")
 
-
 Adminer console
-![Adminer Console](/Adminer_LogAccessCounts_Table.jpg)
+![Adminer Console](./Adminer_LogAccessCounts_Table.jpg)
 Login to the server on address http://localhost:8080
 
-Use root and example1234 (described in docker-compose.yml).
+Login into Adminer, use root and example1234 (described in docker-compose.yml).
 
 Create myuser. Press "SQL Command" and copy then execute
 ```bash
@@ -99,10 +98,10 @@ COLLATE='utf8mb4_general_ci'
 AUTO_INCREMENT=1;
 ```
 
-Very important in /GenePlanetTest/src/MyWebApi/ is file **"config.json"**, where we set access to db for worker. It is used as template to create workers.
+Important in /GenePlanetTest/src/MyWebApi/ is file **"config.json"**, where we set access to db for worker. It is used as template to create workers.
 
 Use value from **DBHOST** (docker-compose.yml) to access dockerizted mysql server, set username and password that have rw rights for "gene-task" database and table.
-Recommended setting: 
+Recommended setting and are already in this repository: 
 ```bash
 {
     "Data": {
@@ -117,7 +116,7 @@ Recommended setting:
 This is example of more simple mechanism, that can be implemented in docker-compose.yml file. 
 Basicly it is Nginx web server acting as Loadbalancer as docker container and working application servers (asp.net core api) as worker nodes. MySQL DB is single, and has volume stored in host mysql server. (dockerized mysql server is using filesystem of host mysql server. Host mysql servrer needs to be shutdown or dockerized server set on different ports)
 
-Demo is using http headers X-Forwarded-For, X-Forwarded-Proto, X-Forwarded-Host to do load balancing task.
+Demo is using http headers _X-Forwarded-For, X-Forwarded-Proto, X-Forwarded-Host_ to do load balancing task.
 
 Finally the magic is done by first two commands. Third one is for adding additional worker. Parameter --scale api=4 is set for 4 worker nodes.
 ```bash
@@ -157,15 +156,15 @@ netstat -aon | findstr :80
 ```
 ## Alternatives to this case fo Loadbalancing
 
-This could be achived by using Kubernetes (on service provider like Linode, DO, Azure, aws) or [Minikube](https://minikube.sigs.k8s.io/docs/start/). Kubernetes offers included loadbalancing among pods and scaling.
+This could be achived by using Kubernetes (on service provider like Linode, DO, Azure, aws) or _[Minikube](https://minikube.sigs.k8s.io/docs/start/)_. Kubernetes offers included loadbalancing among pods and scaling.
 
-Or using [KEDA](https://blog.tomkerkhove.be/2019/06/14/scaling-apps-with-keda/) on Azure.
+Or using _[KEDA](https://blog.tomkerkhove.be/2019/06/14/scaling-apps-with-keda/)_ on Azure.
 
 ## SSL
 
 ### Generate an OpenSSL certificate
 
-On Windows, if you have _Git for Windows_ installed, then you can use the `openssl` command directly. Otherwise, the official page: [OpenSSL.Wiki: Binaries](https://wiki.openssl.org/index.php/Binaries) contains useful URLs for downloading and installation guides.
+On Windows, if you have _Git for Windows_ installed, then you can use the `openssl` command directly. Otherwise, the official page: _[OpenSSL.Wiki: Binaries](https://wiki.openssl.org/index.php/Binaries)_ contains useful URLs for downloading and installation guides.
 
 ```bash
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout localhost.key -out localhost.crt -passin pass:YourSecurePassword
