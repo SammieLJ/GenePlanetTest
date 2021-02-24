@@ -107,6 +107,11 @@ With this command, I have managed to get ip addresses of docker containers.
 docker inspect -f '{{.Name}} - {{.NetworkSettings.IPAddress }}' $(docker ps -aq)
 ```
 
+If you are using docker-compose the command will be this:
+```bash
+docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -aq)
+```
+
 Remotly connect to bash on docker container:
 ```bash
 docker exec -it Docker-Container /bin/bash
