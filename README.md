@@ -58,11 +58,11 @@ Create database named "gene-task". Inside that db, load and run "setup.sql" scri
 
 Don't forget to set user connect from anywhere ( % ) in local MySQL server.
 
-In Docker-compose.yml script, you can see how dockerized MySQL is set, but user, db and tables are being read and written on local host mysql (which has to be shutdown). That's why it is unnececary to setup mysql in docker. With this configuration, dockerized mysql is seen and accessed by loadbalanced workers (same ip range). Docker has big problems with using loadbalancing and database servers, servers by default don't see each other because ip range difference.
+In Docker-compose.yml script, you will find how is MySQL dockerized, user, db and tables are being read and written on local host mysql (which has to be shutdown). With this configuration, dockerized mysql is seen and accessed by loadbalanced workers (same ip range). Docker has big problems with using loadbalancing and database servers, servers by default don't see each other because ip range difference.
 
-Very important in /GenePlanetTest/src/MyWebApi/ is file "config.json", where we set access to db for worker. It is used as template to create workers.
+Very important in /GenePlanetTest/src/MyWebApi/ is file **"config.json"**, where we set access to db for worker. It is used as template to create workers.
 
-Use value from DBHOST (docker-compose.yml) to access dockerizted mysql server, set username and password that have rw rights for "gene-task" database and table.
+Use value from **DBHOST** (docker-compose.yml) to access dockerizted mysql server, set username and password that have rw rights for "gene-task" database and table.
 Recommended setting: 
 ```bash
 {
@@ -71,6 +71,16 @@ Recommended setting:
     }
 }
 ```
+
+Set correct file volume. Set local host mysql files and folders (volume) to be linked on docker server.
+In my case local host mysql files are on windows (left), docker mysql are on linux (right side)
+```bash
+#Specify where the persisted Data should be stored
+    volumes:
+      - ./mysql.cnf:/etc/my.cnf 
+      - c:\xampp\mysql\data:/var/lib/mysql
+```
+Also check included mysql.cnf configuration file. In most cases you can delete this line. If you have trouble running dockerized mysql, then you need to include and inspect configuration value. I needed to set "socket=/tmp/mysql.sock" in order docker mysql server can mount local volume.
 
 ## Set database access in asp.net core app
 
