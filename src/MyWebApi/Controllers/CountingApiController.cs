@@ -36,7 +36,7 @@ namespace MyWebApi.Controllers
                 // now we insert our call as count into the table
                 return new
                 {
-                    message = $"API metoda count was called {logAccessCount.Id} on server {System.Net.Dns.GetHostName()}",
+                    message = $"API method count was called {logAccessCount.Id} on server {System.Net.Dns.GetHostName()}",
                     time = DateTime.Now
                 };
             }
