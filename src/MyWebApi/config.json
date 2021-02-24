@@ -1,5 +1,5 @@
 {
     "Data": {
-        "ConnectionString": "server=172.20.128.2;user id=myuser;password=mypass1234;port=3306;database=gene-task;"
+        "ConnectionString": "server=database;user id=myuser;password=mypass1234;port=3306;database=testdb;"
     }
 }
