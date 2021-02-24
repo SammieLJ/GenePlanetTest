@@ -1,9 +1,5 @@
 version: '3'
 
-#create a volume for the my sql container.To ensure Data persists after my sql container is stopped
-volumes:
-  datafiles:
-
 services:
   #DataBase Service
   database:
@@ -12,18 +8,12 @@ services:
     #Map port 3306 on the mysql container to port 3306 in the host
     ports:
       - "3306:3306"
-    #Specify where the persisted Data should be stored
-    volumes:
-      - ./mysql.cnf:/etc/my.cnf 
-      - c:\xampp\mysql:/var/lib/mysql
     restart: always
     command: --default-authentication-plugin=mysql_native_password
     #Specify Environment Variables for mysql
-    environment: 
-      MYSQL_ROOT_PASSWORD: tabela123
-      MYSQL_USER: myuser
-      MYSQL_PASSWORD: mypass1234
-      MYSQL_DATABASE: gene-task
+    environment:
+      MYSQL_ROOT_PASSWORD: example1234
+    
   #Loadbalancer
   nginx:
     image: nginx:alpine
@@ -40,6 +30,13 @@ services:
     depends_on:
       - api
     restart: always
+
+  #Adminer, to set MySQL with user and table
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
 
   api:
     build: ./src
