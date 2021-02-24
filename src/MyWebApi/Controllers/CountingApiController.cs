@@ -36,7 +36,7 @@ namespace MyWebApi.Controllers
                 // now we insert our call as count into the table
                 return new
                 {
-                    message = $"API metoda count je bila klicana {logAccessCount.Id} na strežniku {System.Net.Dns.GetHostName()}",
+                    message = $"API metoda count was called {logAccessCount.Id} on server {System.Net.Dns.GetHostName()}",
                     time = DateTime.Now
                 };
             }
@@ -77,7 +77,7 @@ namespace MyWebApi.Controllers
                 // now we insert our call as count into the table
                 return new
                 {
-                    message = $"API metoda za skupno vseh klicev je {logAccessCount.allCounts}, streženo iz {System.Net.Dns.GetHostName()}",
+                    message = $"API method for summary of all call counts {logAccessCount.allCounts}, served from {System.Net.Dns.GetHostName()}",
                     time = DateTime.Now
                 };
             }
