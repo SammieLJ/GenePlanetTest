@@ -17,7 +17,7 @@ namespace MyWebApi.Controllers
         }
 
         // POST api/blog
-        [HttpGet("api/count")]
+        [HttpGet("api/count/add")]
         public object Get()
         {
             using (var db = new AppDb())
@@ -41,25 +41,8 @@ namespace MyWebApi.Controllers
                 };
             }
         }
-        /*public object Get()
-        {
-            using (var db = new AppDb())
-            {
-                db.Connection.OpenAsync();
 
-                var logAccessCount = new LogAccessCounts
-                {
-                    Db = db,
-                    IP = NetworkUtil.GetIPAddress().MapToIPv4().ToString(),
-                    HostName = System.Net.Dns.GetHostName()
-                };
-
-                // now we insert our call as count into the table
-                return await (logAccessCount.InsertAsync());
-            }
-        }*/
-
-        [HttpGet("api/AllCounts")]
+        [HttpGet("api/count/show")]
         public object GetAllCounts()
         {
             using (var db = new AppDb())
@@ -83,8 +66,7 @@ namespace MyWebApi.Controllers
             }
         }
         private object await(Task task)
-        {
-            //throw new NotImplementedException();            
+        {          
             return new
             {
                 message = $"API metoda count je bila klicana {task.Id}",
@@ -95,16 +77,6 @@ namespace MyWebApi.Controllers
         private static Task NewMethod(LogAccessCounts logAccessCount)
         {
             return logAccessCount.InsertAsync();
-        }
-
-        [HttpGet("api/helloworld/{name}")]
-        public object Get(string name)
-        {
-            return new
-            {
-                message = $"Hello world, {name}.",
-                time = DateTime.Now
-            };
         }
     }
 }

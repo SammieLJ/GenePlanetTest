@@ -56,22 +56,20 @@ There are few web services that can be accessed:
   http://localhost
   - Default Weather forecast service with randomiozed data
   http://localhost/weatherforecast
-  - User name Helloworld display
-  http://localhost/api/helloworld/{Enter your name}
-  - Count +1 when called and store to sql db
-  http://localhost/api/count
+  - Add +1 to counts table when called and store to sql db
+  http://localhost/api/count/add
   - Show count score from sql db
-  http://localhost/api/allcounts
+  http://localhost/api/count/show
     
 ## Database preparation
 
-At creating and testing table with data, I was running MySQL server locally. I recommend _[HeidiSQL](https://www.heidisql.com/)_ or MySQL Workbench. 
+For creating and testing table with data, I was running locally MySQL server. I recommend using _[HeidiSQL](https://www.heidisql.com/)_ or _MySQL Workbench_ for manual database tweeking. 
 
-First we need to add database, table and user on host db server.
+I was using docker image Adminer, which helped me with creating database, table and user. (you can access Adminer on http://localhost:8080) You can also access docker sql and use "mysql" command.
 
-I was using docker image Adminer, which helped me with creating database, table and user. (you can access Adminer on http://localhost:8080)
-
-Now we will create database named "testdb", "LogAccessCounts" table, where web api services /api/count and /api/allcounts will insert or select data. And lastly we will create myuser, that can read/write data to table. (All scripts are in folder "sql-scripts")
+In the next steps we will: 
+  - create database named "testdb", 
+  - create database user, database and "LogAccessCounts" table (All scripts are in folder "sql-scripts")
 
 **Adminer console**
 
@@ -108,7 +106,16 @@ COLLATE='utf8mb4_general_ci'
 AUTO_INCREMENT=1;
 ```
 
-Important in /GenePlanetTest/src/MyWebApi/ is file **"config.json"**, where we set access to db for worker. It is used as template to create workers.
+You can alternatively connect to Docker MySQL server and use mysql tool.
+Login to Docker MySQL Server:
+```bash
+docker exec -it <Name_of_root_folder>_database_1 /bin/bash
+mysql -u root -p
+mysql> ...  manually add or copy sql commands ...
+```
+
+## Not necessary step, can be skipped. Just in case if application wouldn't connect to MySQL, to do additional check.
+Important in /<Name_of_root_folder>/src/MyWebApi/ is file **"config.json"**, where we set access to db for worker. It is used as template to create workers.
 
 Use value from **DBHOST** (docker-compose.yml) to access dockerizted mysql server, set username and password that have rw rights for "gene-task" database and table.
 Recommended setting and are already in this repository: 
@@ -119,6 +126,25 @@ Recommended setting and are already in this repository:
     }
 }
 ```
+
+## Database exporting MySQLDump
+
+Login to MySQL Server:
+```bash
+docker exec -it <Name_of_root_folder>_database_1 /bin/bash
+```
+
+MySQL dump to file inside docker machine in /home folder:
+```bash
+cd home
+mysqldump -u myuser -p testdb LogAccessCounts > LogAccess_dump.sql
+```
+
+Copy dump file to local folder named (for example) C:\Docker:
+```bash
+docker cp <Name_of_root_folder>_database_1:/home/LogAccess.sql c:\Docker\
+```
+
 
 ## Set database access in asp.net core app
 
@@ -132,8 +158,6 @@ Finally the magic is done by first two commands. Third one is for adding additio
 ```bash
 docker-compose build
 docker-compose up --scale api=4 --build
-
-docker-compose up
 ```
 
 ## Useful tools, when I was developing this demo
