@@ -1,5 +1,0 @@
-{
-    "Data": {
-        "ConnectionString": "server=172.17.0.2;user id=myuser;password=mypass;port=3306;database=geneplanettask;"
-    }
-}
