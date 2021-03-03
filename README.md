@@ -73,7 +73,7 @@ In the next steps we will:
 
 **Adminer console**
 
-Login to the server on address http://localhost:8080, use root and example1234 (described in docker-compose.yml).
+Login to the server on address http://localhost:8080, **Server** is **database**, **Username** is root and **Password** is example1234 (described in docker-compose.yml).
 
 ![Adminer Console](./Adminer_LogAccessCounts_Table.jpg)
 
