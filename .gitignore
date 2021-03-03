@@ -332,5 +332,5 @@ ASALocalRun/
 CSharpLabs/RunExeFromWebApi/WebApi/App_Data/
 
 # Ignore Log files
-/nginx/logs/access.log
-/nginx/logs/error.log
+access.log
+error.log
