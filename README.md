@@ -1,4 +1,4 @@
-# GenePlanet Test - Host an ASP.NET Core App with Nginx and Docker: Load Balancing
+# Test - Host an ASP.NET Core App with Nginx and Docker: Load Balancing, worker scaling static and dynamic
 
 ## Reading and evaluating ideas
 
@@ -60,6 +60,8 @@ There are few web services that can be accessed:
   http://localhost/api/count/add
   - Show count score from sql db
   http://localhost/api/count/show
+
+## Set database access
     
 ## Database preparation
 
@@ -75,7 +77,7 @@ In the next steps we will:
 
 Login to the server on address http://localhost:8080, **Server** is **database**, **Username** is root and **Password** is example1234 (described in docker-compose.yml).
 
-![Adminer Console](./Adminer_LogAccessCounts_Table.jpg)
+![Adminer Console](./pictures/Adminer_LogAccessCounts_Table.jpg)
 
 
 Create myuser. Press "SQL Command" and copy then execute
@@ -114,7 +116,7 @@ mysql -u root -p
 mysql> ...  manually add or copy sql commands ...
 ```
 
-## Not necessary step, can be skipped. Just in case if application wouldn't connect to MySQL, to do additional check.
+## Optional step (can be skipped). Just in case if application wouldn't connect to MySQL, do additional check.
 Important in /<Name_of_root_folder>/src/MyWebApi/ is file **"config.json"**, where we set access to db for worker. It is used as template to create workers.
 
 Use value from **DBHOST** (docker-compose.yml) to access dockerizted mysql server, set username and password that have rw rights for "gene-task" database and table.
@@ -127,7 +129,7 @@ Recommended setting and are already in this repository:
 }
 ```
 
-## Database exporting MySQLDump
+## Database exporting MySQLDump (optional step)
 
 Login to MySQL Server:
 ```bash
@@ -146,10 +148,10 @@ docker cp <Name_of_root_folder>_database_1:/home/LogAccess.sql c:\Docker\
 ```
 
 
-## Set database access in asp.net core app
+## Set asp.net core app aplication
 
-## Load Balancing
-This is example of more simple mechanism, that can be implemented in docker-compose.yml file. 
+## Load Balancing - static
+This is example of more simple mechanism, that can be implemented and run from docker-compose.yml file. You ghave to staticlly define beforehand, how many webworkers do we whant to scale.
 Basicly it is Nginx web server acting as Loadbalancer as docker container and working application servers (asp.net core api) as worker nodes. MySQL DB is single, and has volume stored in host mysql server. (dockerized mysql server is using filesystem of host mysql server. Host mysql servrer needs to be shutdown or dockerized server set on different ports)
 
 Demo is using http headers _X-Forwarded-For, X-Forwarded-Proto, X-Forwarded-Host_ to do load balancing task.
@@ -159,6 +161,52 @@ Finally the magic is done by first two commands. Third one is for adding additio
 docker-compose build
 docker-compose up --scale api=4 --build
 ```
+## Load Balancing - dynamic
+In this case, we will set Swarm mechanism in Docker, that will allow us dynamic scaling, during production.
+
+Follow this steps:
+```bash
+$ docker swarm init
+$ cd swarm_yaml
+$ docker-compose build
+$ docker stack deploy --compose-file docker-compose.yml stackdemo
+$ docker service ls
+ID             NAME                 MODE         REPLICAS   IMAGE            PORTS
+116phorfyppw   stackdemo_adminer    replicated   1/1        adminer:latest   *:8080->8080/tcp
+e09lgjbcdi8g   stackdemo_api        replicated   4/4        api:latest       *:30006->5000/tcp
+vp7vo04ax39q   stackdemo_database   replicated   1/1        mysql:8.0.22     *:3306->3306/tcp
+v0eedmulprhx   stackdemo_nginx      replicated   1/1        nginx:alpine     *:80->80/tcp, *:443->443/tcp
+```
+
+Or you can use:
+```bash
+docker service ls
+```
+
+Now, let's scale from default 2 web api workers to 4
+```bash
+$ docker service scale stackdemo_api=4
+stackdemo_api scaled to 4
+overall progress: 4 out of 4 tasks
+1/4: running   [==================================================>]
+2/4: running   [==================================================>]
+3/4: running   [==================================================>]
+4/4: running   [==================================================>]
+verify: Service converged
+```
+
+If we want to destroy swarm service:
+```bash
+$ docker stack rm stackdemo
+```
+
+Or we can leave and initialize later (using docker swarm init cmd)
+```bash
+$ docker swarm leave --force
+```
+
+![Scaling Swarm Service in Cmdln](./pictures/Docker_swarm_cmdln.jpg)
+
 
 ## Useful tools, when I was developing this demo
 
