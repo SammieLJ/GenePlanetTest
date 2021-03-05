@@ -10,7 +10,9 @@ Following the three articles, _[Configure ASP.NET Core to work with proxy server
 
 This demo works on all three platforms (windows/linux/macos)
 
-You need to insrtall .Net Core 3.1 for your platform and set CLR commands that are accessible in Command Line/Terminal
+You need to have installed **Docker** at least Community Edition ver. **20.10.2**
+
+You need to have installed **.Net Core 3.1** or higher for your platform and set CLR commands (dotnet ...) accessible in Command Line/Terminal
 
 Optionally you would need Visual Studio Code or similar Editor or IDE if you need to tweak code.
 
