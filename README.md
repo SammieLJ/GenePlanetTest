@@ -1,4 +1,4 @@
-# Primer of host - an ASP.NET Core App with Nginx and Docker: Load Balancing, worker scaling static and dynamic
+# An ASP.NET Core App example with Nginx and Docker: Load Balancing, worker scaling static and dynamic
 
 ## Intruduction
 
@@ -73,7 +73,7 @@ There are few web services that can be accessed:
 
 ## Set database access
     
-## Database preparation
+### Database preparation
 
 For creating and testing table with data, I was running locally MySQL server. I recommend using _[HeidiSQL](https://www.heidisql.com/)_ or _MySQL Workbench_ for manual database tweeking. 
 
