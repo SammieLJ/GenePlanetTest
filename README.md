@@ -1,10 +1,20 @@
-# Test - Host an ASP.NET Core App with Nginx and Docker: Load Balancing, worker scaling static and dynamic
+# Primer of host - an ASP.NET Core App with Nginx and Docker: Load Balancing, worker scaling static and dynamic
 
-## Reading and evaluating ideas
+## Intruduction
+
+### Reading and evaluating ideas
 
 Following the three articles, _[Configure ASP.NET Core to work with proxy servers and load balancers](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-3.1#configure-nginx)_ and _[Host ASP.NET Core on Linux with Nginx](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-3.1)_ and _[Medium Article](https://codeburst.io/load-balancing-an-asp-net-core-web-app-using-nginx-and-docker-66753eb08204)_, in Microsoft Docs, I created a demo application using Docker Compose, which orchestrates an Nginx reverse proxy server and an ASP.NET Core Web API app.
 
-## Try demo out:
+### Software Requirements
+
+This demo works on all three platforms (windows/linux/macos)
+
+You need to insrtall .Net Core 3.1 for your platform and set CLR commands that are accessible in Command Line/Terminal
+
+Optionally you would need Visual Studio Code or similar Editor or IDE if you need to tweak code.
+
+### Try demo out:
 
 Download git repo and spin 3x workers:
 ```bash
@@ -13,7 +23,7 @@ docker-compose up --scale api=3 --build
 ```
 Almost set, go to **Database preparation** to set database and then you will be able to access all APIs described in **Web service exposure**
 
-## Project creation
+### Project creation
  Reading article _[Configure ASP.NET Core to work with proxy servers and load balancers](https://dev.to/avinashth/containerize-a-net-core-web-api-project-4p05)_, I created core application, based on default "Weather Forecast" web api service.
  
  Added MySQL Connector
@@ -49,7 +59,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:5.0
 Test example of web service access:
 http://localhost:8080/weatherforecast
 
-## Web service exposure
+### Web service exposure
 
 There are few web services that can be accessed:
   - Basic information, like service hostname, ip gateway and server ip address
@@ -116,7 +126,7 @@ mysql -u root -p
 mysql> ...  manually add or copy sql commands ...
 ```
 
-## Optional step (can be skipped). Just in case if application wouldn't connect to MySQL, do additional check.
+### Optional step (can be skipped). Just in case if application wouldn't connect to MySQL, do additional check.
 Important in /<Name_of_root_folder>/src/MyWebApi/ is file **"config.json"**, where we set access to db for worker. It is used as template to create workers.
 
 Use value from **DBHOST** (docker-compose.yml) to access dockerizted mysql server, set username and password that have rw rights for "gene-task" database and table.
@@ -129,7 +139,7 @@ Recommended setting and are already in this repository:
 }
 ```
 
-## Database exporting MySQLDump (optional step)
+### Database exporting MySQLDump (optional step)
 
 Login to MySQL Server:
 ```bash
@@ -150,7 +160,7 @@ docker cp <Name_of_root_folder>_database_1:/home/LogAccess.sql c:\Docker\
 
 ## Set asp.net core app aplication
 
-## Load Balancing - static
+### Load Balancing - static
 This is example of more simple mechanism, that can be implemented and run from docker-compose.yml file. You ghave to staticlly define beforehand, how many webworkers do we whant to scale.
 Basicly it is Nginx web server acting as Loadbalancer as docker container and working application servers (asp.net core api) as worker nodes. MySQL DB is single, and has volume stored in host mysql server. (dockerized mysql server is using filesystem of host mysql server. Host mysql servrer needs to be shutdown or dockerized server set on different ports)
 
@@ -161,7 +171,7 @@ Finally the magic is done by first two commands. Third one is for adding additio
 docker-compose build
 docker-compose up --scale api=4 --build
 ```
-## Load Balancing - dynamic
+### Load Balancing - dynamic
 In this case, we will set Swarm mechanism in Docker, that will allow us dynamic scaling, during production.
 
 Follow this steps:
@@ -236,7 +246,7 @@ See all established connedtions on host or in docker
 ```bash
 netstat -aon | findstr :80
 ```
-## Alternatives to this case fo Loadbalancing
+### Alternatives to this case fo Loadbalancing
 
 This could be achived by using Kubernetes (on service provider like Linode, DO, Azure, aws) or _[Minikube](https://minikube.sigs.k8s.io/docs/start/)_. Kubernetes offers included loadbalancing among pods and scaling.
 
