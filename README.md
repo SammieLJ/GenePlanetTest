@@ -220,16 +220,20 @@ $ docker swarm leave --force
 
 ## Useful tools, when I was developing this demo
 
-This demo works best on Linux, like Ubnuntu, System76 or RedHat or MacOS. I didn't manage it to run on Windows 10. On Windows is problem of docker mysql server volume file mounting.
+This demo works best on Linux (Ubnuntu, System76, RedHat) or MacOS and on Windows 10.
 
-With this command, I have managed to get ip addresses of docker containers.
+With this PowerShell (Win10) command, I have managed to get ip addresses of docker containers.
 ```bash
 docker inspect -f '{{.Name}} - {{.NetworkSettings.IPAddress }}' $(docker ps -aq)
 ```
 
-If you are using docker-compose the command will be this:
+If you are using docker-compose the PowerShell command will be this:
 ```bash
 docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -aq)
+```
+On Linux _[this command](https://gist.github.com/ipedrazas/2c93f6e74737d1f8a791)_ would be usefull:
+```bash
+docker ps -q | xargs -n 1 docker inspect --format '{{ .Name }} {{range .NetworkSettings.Networks}} {{.IPAddress}}{{end}}' | sed 's#^/##';
 ```
 
 Remotly connect to bash on docker container:
