@@ -1,4 +1,4 @@
-# An ASP.NET Core App example with Nginx and Docker: Load Balancing, worker scaling static and dynamic
+# An ASP.NET Core App example with Nginx and Docker, showcasing Load Balancing, static and dynamic worker scaling
 
 ## Intruduction
 
