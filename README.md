@@ -179,7 +179,7 @@ In this case, we will set Swarm mechanism in Docker, that will allow us dynamic 
 Follow this steps:
 ```bash
 $ docker swarm init
-$ cd swarm_yaml
+$ cd swarm_yml
 $ docker-compose build
 $ docker stack deploy --compose-file docker-compose.yml stackdemo
 $ docker service ls
