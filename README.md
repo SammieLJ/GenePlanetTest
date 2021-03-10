@@ -182,7 +182,7 @@ $ docker swarm init
 $ cd swarm_yml
 $ docker-compose build
 $ docker stack deploy --compose-file docker-compose.yml stackdemo
-$ docker service ls
+$ docker stack service stackdemo
 ID             NAME                 MODE         REPLICAS   IMAGE            PORTS
 116phorfyppw   stackdemo_adminer    replicated   1/1        adminer:latest   *:8080->8080/tcp
 e09lgjbcdi8g   stackdemo_api        replicated   4/4        api:latest       *:30006->5000/tcp
@@ -219,6 +219,15 @@ $ docker swarm leave --force
 
 ![Scaling Swarm Service in Cmdln](./pictures/Docker_swarm_cmdln.jpg)
 
+## Using Docker Swarm Load-Balancer
+
+You can use Web Load-Balancer embeded in Docker Swarm. Rename file docker-compose.no-nginx.yml in (docker_yml folder) to docker-compose.yml. Also rename original docker-compose.yml to docker-compose.original.yml.
+
+This new composer yml file will build database, adminer and api servers. Docker Swarm will do web traffic Load-Balancing.
+
+It's slower than nginx, it doensn't change web api server on every request. Nginx ver. easly enables ssl (443) web connections.
+
+Unfortunately you will have to dig more info, to enable ssl connections when using Docker Swarm Load-Balancing.
 
 ## Useful tools, when I was developing this demo
 
