@@ -219,7 +219,7 @@ $ docker swarm leave --force
 
 ![Scaling Swarm Service in Cmdln](./pictures/Docker_swarm_cmdln.jpg)
 
-## Using Docker Swarm Load-Balancer
+### Using Docker Swarm Load-Balancer
 
 You can use Web Load-Balancer embeded in Docker Swarm. Rename file docker-compose.no-nginx.yml in (docker_yml folder) to docker-compose.yml. Also rename original docker-compose.yml to docker-compose.original.yml.
 
